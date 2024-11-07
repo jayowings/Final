@@ -1,3 +1,6 @@
+#include "Codebreaker.h"
+using namespace std;
+
 bool Code::Pguess(){
     //Make Computer Code
 //****// for loop, ...; turnsToGo--)
@@ -36,3 +39,8 @@ bool Code::checkCorrect(){//**Class/struct suggested in Cguess would also be use
     //display Correct and Almost, return true if win else return false
 }
 
+Code::Code(bool PlayerCdoe, int& gamesWon){
+    //if Player is codebreaker, run Pguess, if true, gamesWon++
+
+    //if Player is codemaker, run Cguess, if false, gamesWon++
+}
