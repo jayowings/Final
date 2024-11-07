@@ -14,6 +14,7 @@ Game console
 if input game name is (per gamename)
 include and run game
 
+
 Codebreaker game
 computer or player choice
 if computer
@@ -24,10 +25,35 @@ until all five are correct or no turns remain
         per value == add to a count, remove value from player array **create temp computer array for next check without values that are exact matches
         then, if remaining player values in computer array, add to a seperate count
     display checks
-
 if player
 until all five are correct or no turns remain
     computer displays array[5] (first iteration all values are random)
     player inputs correct and "in but not correct" values
     computer saves # values, randomizing the rest (# based loosely on num correct and in)
     if all 5 were correct, computer wins
+
+
+
+
+
+
+
+
+
+
+
+
+2 Classes
+    class Code
+    
+Variable
+    string choice;
+Struct or Enum
+
+Array
+    int computerCode[5];
+Function
+    void Pguess();
+Control structure (for loop, while loop, if statement, or switch statement)
+    Whole Game Console is while and ifs
+    
