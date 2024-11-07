@@ -25,18 +25,40 @@ bool Code::Cguess(){//**Computer guess array could be formatted easier if each c
     //if turnsToGo == 0 and code has not been found, return true
 }
 
-bool Code::checkCorrect(){//**Class/struct suggested in Cguess would also be useful here to nullify the need for a temp array**//
-    //creates temp array
-
+bool Code::checkCorrect(){ //Player guess, Computer Code
     //resets Correct and Almost
+    Correct = Almost = 0;
 
-//****// first for loop (i)
+//****// first for loop (i) check for Correct values
+    for(int i = 0; i < 5; i++){
+        if(computerCode[i].value == guessCode[i].value){
+            guessCode[i].correctGuess = computerCode[i].correctGuess = TRUE; //set flag
+            Correct++;
+        }
+    }
     //compare [i] on guess and computer code, if ==, Correct++
 
 //****// second for loop (i)
+    for(int i = 0; i < 5; i++){
+        if(guessCode[i].correctGuess != TRUE){ //if value has not already been marked as correct
+            for(int j = 0; j < 5; j++){
+                if(computerCode[j].correctGuess < ALMOST/*if value has not already been marked as correct(3) or Almost(2)*/ && computerCode[j].value == guessCode[i].value){
+                    computerCode[j].correctGuess = guessCode[i].correctGuess = ALMOST;
+                    Almost++;
+                    break; //exits computercode loop, next iteration of guesscode loop
+                }
+            }
+        }
+    }
     //if [i] on guess is in computer code (use temp or Class/struct to check if value has already been counted in Correct) Almost++;
 
     //display Correct and Almost, return true if win else return false
+    cout << "\nCorrect guesses: " << Correct << "\tRight color, wrong position: " << Almost << endl;
+    if(Correct == 5){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 Code::Code(bool PlayerCdoe, int& gamesWon){
