@@ -19,6 +19,10 @@ int main(){
             using namespace std;
             YahtzeeSetUp(gamesWon);
             gamesPlayed++;
+        }else if(choice == "Codebreaker"){
+            #include "Codebreaker.h"
+            using namespace std;
+            
         };
     }
     cout << "Thanks for playing!\n";
