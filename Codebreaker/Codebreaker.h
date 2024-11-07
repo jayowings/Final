@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <string>
 
 using namespace std;
 
@@ -7,9 +8,11 @@ enum INCODE{UNKNOWN, FALSE, ALMOST, TRUE};
 //enum COLORVALS{} possible add-on for later in the program
 
 struct code{
+    string inputArray;
     int value = 0;
     INCODE correctGuess = UNKNOWN;
 };
+
 
 class Code{
     private:

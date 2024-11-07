@@ -11,12 +11,30 @@ bool Code::Pguess(){
     for ( ; turnsToGo > 0; turnsToGo--){
         cout << "Take a guess! (1,2,3,4,5)\n";
     //User input choices, save in guessCode array
-        getline(cin, guessCode[0].value, ','); //TODO change value to type char || create function that changes char to int, change struct code to class
-        getline(cin, guessCode[1].value, ',');
-        getline(cin, guessCode[2].value, ',');
-        getline(cin, guessCode[3].value, ',');
-        getline(cin, guessCode[4].value, ',');
-
+        getline(cin, guessCode[0].inputArray, ',');
+        getline(cin, guessCode[1].inputArray, ',');
+        getline(cin, guessCode[2].inputArray, ',');
+        getline(cin, guessCode[3].inputArray, ',');
+        getline(cin, guessCode[4].inputArray, ',');
+        for(int i = 0; i < 5; i++){
+            if(guessCode[i].inputArray == "1"){
+                guessCode[i].value = 1;
+            }else if(guessCode[i].inputArray == "2"){
+                guessCode[i].value = 2;
+            }else if(guessCode[i].inputArray == "3"){
+                guessCode[i].value = 3;
+            }else if(guessCode[i].inputArray == "4"){
+                guessCode[i].value = 4;
+            }else if(guessCode[i].inputArray == "5"){
+                guessCode[i].value = 5;
+            }else if(guessCode[i].inputArray == "6"){
+                guessCode[i].value = 6;
+            }else if(guessCode[i].inputArray == "7"){
+                guessCode[i].value = 7;
+            }else{
+                guessCode[i].value = 8; //default value
+            }
+        }
     //compare using checkCorrect
         if(checkCorrect()){
             return true;
