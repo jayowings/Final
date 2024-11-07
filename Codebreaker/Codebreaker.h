@@ -3,10 +3,18 @@
 
 using namespace std;
 
+enum INCODE{UNKNOWN, FALSE, ALMOST, TRUE};
+//enum COLORVALS{} possible add-on for later in the program
+
+struct code{
+    int value = 0;
+    INCODE correctGuess = UNKNOWN;
+};
+
 class Code{
     private:
-        int computerCode[5];
-        int guessCode[5];
+        code computerCode[5];
+        code guessCode[5];
         int Correct, Almost;
         int turnsToGo = 12;
         bool PlayerWin = false;
@@ -17,4 +25,4 @@ class Code{
         Code(bool PlayerCode, int& gamesWon);
 };
 
-#include "Codebreaker.cpp"
+//#include "Codebreaker.cpp"

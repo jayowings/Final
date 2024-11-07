@@ -49,11 +49,10 @@ until all five are correct or no turns remain
 Variable
     string choice;
 Struct or Enum
-
+    enum INCODE{} stuct code{}
 Array
     int computerCode[5];
 Function
     void Pguess();
 Control structure (for loop, while loop, if statement, or switch statement)
     Whole Game Console is while and ifs
-    
