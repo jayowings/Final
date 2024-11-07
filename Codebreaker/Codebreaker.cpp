@@ -3,14 +3,28 @@ using namespace std;
 
 bool Code::Pguess(){
     //Make Computer Code
+    for(int i = 0; i < 5; i++){
+        computerCode[i].value = (rand() % 8) + 1;
+    }
+
 //****// for loop, ...; turnsToGo--)
+    for ( ; turnsToGo > 0; turnsToGo--){
+        cout << "Take a guess! (1,2,3,4,5)\n";
     //User input choices, save in guessCode array
+        getline(cin, guessCode[0].value, ','); //TODO change value to type char || create function that changes char to int, change struct code to class
+        getline(cin, guessCode[1].value, ',');
+        getline(cin, guessCode[2].value, ',');
+        getline(cin, guessCode[3].value, ',');
+        getline(cin, guessCode[4].value, ',');
 
     //compare using checkCorrect
-
+        if(checkCorrect()){
+            return true;
+        }
     //if win, break, return true, else loop back to //****//
-
+    }
     //if turnsToGo == 0 and code has not been found, return false
+    return false;
 };
 
 bool Code::Cguess(){//**Computer guess array could be formatted easier if each code position was a struct with members int value and enum{UNKNOWN, FALSE, ALMOST, TRUE} or a class with a built in random function**//
@@ -34,6 +48,8 @@ bool Code::checkCorrect(){ //Player guess, Computer Code
         if(computerCode[i].value == guessCode[i].value){
             guessCode[i].correctGuess = computerCode[i].correctGuess = TRUE; //set flag
             Correct++;
+        }else{
+            guessCode[i].correctGuess = computerCode[i].correctGuess = UNKNOWN; //Resets flags automatically
         }
     }
     //compare [i] on guess and computer code, if ==, Correct++
