@@ -11,10 +11,10 @@ class Code{
         bool PlayerWin = false;
     public:
         int guessCode[5];
-        void Pguess();
-        void Cguess();
-        void checkCorrect();
-        Code(bool PlayerCode);
+        bool Pguess();
+        bool Cguess();
+        bool checkCorrect();
+        Code(bool PlayerCode, int& gamesWon);
 };
 
 #include "Codebreaker.cpp"
