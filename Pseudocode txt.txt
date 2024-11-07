@@ -1,10 +1,10 @@
 ////Ideas
 minesweeper
-Uno
+*Uno
 username/password database
 Settlers of Catan
-Codebreaker Game
-Tsuro
+*Codebreaker Game
+*Tsuro
 
 
 
