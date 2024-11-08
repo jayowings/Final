@@ -34,7 +34,6 @@ until all five are correct or no turns remain
 
 computer turn logic
 *flags
-save guess (in a linked list?) in previous guess value (initialized as [0,0,0,0,0]) along with prevCorrect and prevAlmost
 if(prevCorrect + prevAlmost <> Correct + Almost){
     greater than {
         if num changed values == difference, changed values in prevguess are flagged as "ALMOST" and new values are flagged as FALSE (position is irrelevant for num changed values)
@@ -50,6 +49,7 @@ if(prevCorrect <> Correct){
     }
     *****only one TRUE value can exist per previousGuesses[8] array (value checker)
 }
+save guess (in a linked list?) in previous guess value (initialized as [0,0,0,0,0]) along with prevCorrect and prevAlmost
 
 *manipulation
 save correct as prevCorrect
@@ -65,6 +65,7 @@ if(Almost > 0 and Correct == 0){
     flag all values as FALSE in all positions (ignoring any values marked TRUE)
     New(UNKNOWN) value for all FALSE
 }
+
 
 
 

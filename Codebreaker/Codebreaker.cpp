@@ -69,9 +69,9 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
     for(int i = 0; i < 5; i++){
         computerCode[i].value = guessCode[i].value = (rand() % 8) + 1;
     }
+    int prevCorrect = 0, prevAlmost = 0;
 
     for ( ; turnsToGo > 0; turnsToGo--){
-//****// for loop, ...; turnsToGo--)
     //Computer prints guess
         for(int i = 0; i < 5; i++){
             cout << guessCode[i].value;
@@ -95,30 +95,43 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
             if(i == 0) return false;
             else return true;
         }
-
-    //logic to manipulate computer guess, loop back to //****//
-        //deciding which values to change
-        if(Correct == 0){ //when all elements are wrong
-            for(int i = 0; i < 5; i++){
-                guessCode[i].correctGuess = FALSE; //TODO change correctGuess to guessResult function call
+        int ComparePrev[12];
+        ComparePrev[10] = 0;
+        ComparePrev[11] = 0;
+        for(int i = 0; i < 5; i++){ //Check values in the same position
+            ComparePrev[i] = guessCode[i].value;
+            ComparePrev[i + 5] = computerCode[i].value;
+            if(ComparePrev[i] == ComparePrev[i + 5]){
+                ComparePrev[10]++; //Same position
+                ComparePrev[11]++; //Differect position same number
+                ComparePrev[i] = -1;
+                ComparePrev[i + 5] = 0;
             }
         }
-        if(Almost == 5){ //all numbers are in the code
-            for(int i = 0; i < 5; i++){
-                guessCode[i].correctGuess = ALMOST;
+        for(int i=0; i<5; i++){ //Check values in different positions
+            for (int j = 5; j<10; j++){
+                if(ComparePrev[i] == ComparePrev[j]){
+                    ComparePrev[i] = -1;
+                    ComparePrev[j] = 0;
+                    ComparePrev[11]++;
+                }
             }
         }
-        //comparing current and previous to find FALSE
+        if(prevAlmost + prevCorrect != Almost + Correct){
+            if(prevAlmost + prevCorrect > Almost + Correct && ComparePrev[11] == (5 - (prevAlmost + prevCorrect) + Almost + Correct)){
+                
+            }
+        }
+        for(int i = 0; i < 5; i++){ //Save previous code
+            computerCode[i].value = guessCode[i].value;
+        }
 
         //Changeing values
         for(int i = 0; i < 5; i++){ //When element(s) is known to be false
-            if(guessCode[i].correctGuess == FALSE){
-                guessCode[i].value = (rand() % 8) + 1;
-                guessCode[i].correctGuess = UNKNOWN;
-                if(computerCode[i].value == guessCode[i].value){
-                    i--;
-                    guessCode[i].correctGuess == FALSE;
-                }
+            if(!guessCode[i].guessChecker()){
+                do{
+                    guessCode[i].value = (rand() % 8) + 1;
+                }while(!guessCode[i].guessChecker())
             }
         }
         //if no elements are known to be FALSE
