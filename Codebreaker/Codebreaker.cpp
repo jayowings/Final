@@ -1,7 +1,7 @@
 #include "Codebreaker.h"
 using namespace std;
 
-bool Code::Pguess(){
+bool Codebreaker::Pguess(){
     //Make Computer Code
     for(int i = 0; i < 5; i++){
         computerCode[i].value = (rand() % 8) + 1;
@@ -45,7 +45,7 @@ bool Code::Pguess(){
     return false;
 };
 
-bool Code::Cguess(){//**Computer guess array could be formatted easier if each code position was a struct with members int value and enum{UNKNOWN, FALSE, ALMOST, TRUE} or a class with a built in random function**//
+bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if each code position was a struct with members int value and enum{UNKNOWN, FALSE, ALMOST, TRUE} or a class with a built in random function**//
     //initial guess created
 //****// for loop, ...; turnsToGo--)
     //Computer prints guess
@@ -57,7 +57,7 @@ bool Code::Cguess(){//**Computer guess array could be formatted easier if each c
     //if turnsToGo == 0 and code has not been found, return true
 }
 
-bool Code::checkCorrect(){ //Player guess, Computer Code
+bool Codebreaker::checkCorrect(){ //Player guess, Computer Code
     //resets Correct and Almost
     Correct = Almost = 0;
 
@@ -95,7 +95,7 @@ bool Code::checkCorrect(){ //Player guess, Computer Code
     }
 }
 
-Code::Code(bool PlayerCdoe, int& gamesWon){
+Codebreaker::Codebreaker(bool PlayerCdoe, int& gamesWon){
     if(PlayerCdoe){
         if(Pguess()){
             gamesWon++;
@@ -107,4 +107,27 @@ Code::Code(bool PlayerCdoe, int& gamesWon){
         }
     }
     //if Player is codemaker, run Cguess, if false, gamesWon++
+}
+
+void CodebreakerSetUp(int& gamesWon){
+    //Welcome message
+    cout << "Welcome to Codebreaker!\n";
+
+    //Outline rules
+
+    int TF;
+    while(true){
+        cout << "(1)Codemaker or (2)Codebreaker? ";
+    //input T/F for Codemaker/Codebreaker
+        cin >> TF;
+        if(TF == 1){
+            Codebreaker Game1(false, gamesWon);
+            break;
+        }else if(TF == 2){
+            Codebreaker Game1(true, gamesWon);
+            break;
+        }
+        cout << "Invalid response!\n";
+    }
+    //create Codebreaker object
 }

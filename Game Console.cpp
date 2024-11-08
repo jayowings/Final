@@ -22,7 +22,8 @@ int main(){
         }else if(choice == "Codebreaker"){
             #include "Codebreaker.h"
             using namespace std;
-            
+            CodebreakerSetUp(gamesWon);
+            gamesPlayed++;
         };
     }
     cout << "Thanks for playing!\n";

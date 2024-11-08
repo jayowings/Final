@@ -14,7 +14,7 @@ struct code{
 };
 
 
-class Code{
+class Codebreaker{
     private:
         code computerCode[5];
         code guessCode[5];
@@ -25,7 +25,8 @@ class Code{
         bool Cguess();
         bool checkCorrect();
     public:
-        Code(bool PlayerCode, int& gamesWon);
+        Codebreaker(bool PlayerCode, int& gamesWon);
 };
 
+void CodebreakerSetUp(int& gamesWon);
 //#include "Codebreaker.cpp"
