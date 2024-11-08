@@ -96,7 +96,15 @@ bool Code::checkCorrect(){ //Player guess, Computer Code
 }
 
 Code::Code(bool PlayerCdoe, int& gamesWon){
+    if(PlayerCdoe){
+        if(Pguess()){
+            gamesWon++;
+        }
     //if Player is codebreaker, run Pguess, if true, gamesWon++
-
+    }else{
+        if(!Cguess()){
+            gamesWon++;
+        }
+    }
     //if Player is codemaker, run Cguess, if false, gamesWon++
 }
