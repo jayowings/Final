@@ -1103,6 +1103,7 @@ void playYahtzee(int numPlayers, bool computerPlayer, int& gamesWon){
 
 void YahtzeeSetUp(int& gamesWon){
     cout << "Welcome to Yahtzee!\n";
+    //TODO add rules
     cout << "How many players? ";
     cin >> numPlayers;
     cout << "Computer player? Y/N ";
