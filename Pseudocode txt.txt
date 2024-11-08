@@ -32,6 +32,39 @@ until all five are correct or no turns remain
     computer saves # values, randomizing the rest (# based loosely on num correct and in)
     if all 5 were correct, computer wins
 
+computer turn logic
+*flags
+save guess (in a linked list?) in previous guess value (initialized as [0,0,0,0,0]) along with prevCorrect and prevAlmost
+if(prevCorrect + prevAlmost <> Correct + Almost){
+    greater than {
+        if num changed values == difference, changed values in prevguess are flagged as "ALMOST" and new values are flagged as FALSE (position is irrelevant for num changed values)
+    }less than {
+        if num changed values == difference, new values are flagged as ALMOST and prev values are flagged as FALSE (position is irrelevant for num changed values)
+    }
+}
+if(prevCorrect <> Correct){
+    greater than{
+        if num changed values == difference, changed values in prevguess are flagged as TRUE and new values are flagged as ALMOST or FALSE based on change in prevAlmost->Almost
+    }less than{
+        if num changed values == difference, new values are flagged as TRUE and prev values are flagged as FALSE or ALMOST based on change in prevAlmost->Almost
+    }
+    *****only one TRUE value can exist per previousGuesses[8] array (value checker)
+}
+
+*manipulation
+save correct as prevCorrect
+for(value in code == true){
+    Correct-- (ignore values known as TRUE)
+}
+if(Almost > 0 and Correct == 0){
+    shift all values left one (skipping over true values), add new value in [4]
+    repeat shift for values that are ALMOST in given location ([0] is stored at [4])
+}else if(Correct > 0){
+    add new value in [4], unless previous changes (location matters) == 1(or 2 if other changed value == TRUE), then new value(skipping known FALSE or ALMOST in given position) is placed at [previous change - 1(skipping TRUE)]
+}else if(Correct == 0 and Almost == 0){
+    flag all values as FALSE in all positions (ignoring any values marked TRUE)
+    New(UNKNOWN) value for all FALSE
+}
 
 
 
