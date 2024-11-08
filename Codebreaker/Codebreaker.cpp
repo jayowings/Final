@@ -1,6 +1,19 @@
 #include "Codebreaker.h"
 using namespace std;
 
+bool code::guessChecker(){
+    for(int i = 0; i < 8; i++){
+        if(this->previousGuesses[i] == TRUE){ //if there is a value that has been proven true
+            this->value = i; //set value to true value
+            return true;
+        }
+    }
+    if(this->previousGuesses[this->value] == FALSE || this->previousGuesses[this->value] == ALMOST){ //if this guess has already been proven wrong
+        return false;
+    }
+    return true; //if unknown and no known true value exists, guess is allowed
+}
+
 bool Codebreaker::Pguess(){
     //Make Computer Code
     for(int i = 0; i < 5; i++){
@@ -81,7 +94,7 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
         //deciding which values to change
         if(Correct == 0){ //when all elements are wrong
             for(int i = 0; i < 5; i++){
-                guessCode[i].correctGuess = FALSE;
+                guessCode[i].correctGuess = FALSE; //TODO change correctGuess to guessResult function call
             }
         }
         if(Almost == 5){ //all numbers are in the code

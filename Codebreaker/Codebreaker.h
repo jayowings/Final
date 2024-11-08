@@ -7,10 +7,14 @@ using namespace std;
 enum INCODE{UNKNOWN, FALSE, ALMOST, TRUE};
 //enum COLORVALS{} possible add-on for later in the program
 
-struct code{
-    string inputArray;
-    int value = 0;
-    INCODE correctGuess = UNKNOWN;
+class code{
+        INCODE previousGuesses[8];
+    public:
+        string inputArray;
+        int value = 0;
+        INCODE correctGuess = UNKNOWN;
+        bool guessChecker();
+        void guessResult();
 };
 
 
