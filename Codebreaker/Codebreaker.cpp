@@ -47,13 +47,67 @@ bool Codebreaker::Pguess(){
 
 bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if each code position was a struct with members int value and enum{UNKNOWN, FALSE, ALMOST, TRUE} or a class with a built in random function**//
     //initial guess created
+    for(int i = 0; i < 5; i++){
+        computerCode[i].value = guessCode[i].value = (rand() % 8) + 1;
+    }
+
+    for ( ; turnsToGo > 0; turnsToGo--){
 //****// for loop, ...; turnsToGo--)
     //Computer prints guess
+        for(int i = 0; i < 5; i++){
+            cout << guessCode[i].value;
+            if(i != 4){
+                cout << ',';
+            }
+        }
 
-    //user input numCorrect and numAlmost
+        cout << "How many are in the correct position? ";
+    //user input numCorrect and numAlmost, break for computer win (return false)
+        cin >> Correct;
+        if(Correct == 5){
+            return false;
+        }
+        cout << "How many are in the wrong position? ";
+        cin >> Almost;
+        if(Correct + Almost > 5 || (Correct == 4 && Almost == 1)){ //invalid input restarts the game
+            cout << "Invalid input. Please review game rules and try again.";
+            int i = 0;
+            CodebreakerSetUp(i);
+            if(i == 0) return false;
+            else return true;
+        }
 
-    //logic to manipulate computer guess, break for computer win (return false), loop back to //****//
+    //logic to manipulate computer guess, loop back to //****//
+        //deciding which values to change
+        if(Correct == 0){ //when all elements are wrong
+            for(int i = 0; i < 5; i++){
+                guessCode[i].correctGuess = FALSE;
+            }
+        }
+        if(Almost == 5){ //all numbers are in the code
+            for(int i = 0; i < 5; i++){
+                guessCode[i].correctGuess = ALMOST;
+            }
+        }
+        //comparing current and previous to find FALSE
 
+        //Changeing values
+        for(int i = 0; i < 5; i++){ //When element(s) is known to be false
+            if(guessCode[i].correctGuess == FALSE){
+                guessCode[i].value = (rand() % 8) + 1;
+                guessCode[i].correctGuess = UNKNOWN;
+                if(computerCode[i].value == guessCode[i].value){
+                    i--;
+                    guessCode[i].correctGuess == FALSE;
+                }
+            }
+        }
+        //if no elements are known to be FALSE
+        if(guessCode[0].value == computerCode[0].value && guessCode[1].value == computerCode[1].value && guessCode[2].value == computerCode[2].value && guessCode[3].value == computerCode[3].value && guessCode[4].value == computerCode[4].value){
+            //Swap Almost values
+        }
+
+    }
     //if turnsToGo == 0 and code has not been found, return true
 }
 
