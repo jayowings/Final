@@ -14,7 +14,7 @@ class code{
         int value = 0;
         INCODE correctGuess = UNKNOWN;
         bool guessChecker();
-        void guessResult();
+        void guessResult(INCODE result);
 };
 
 

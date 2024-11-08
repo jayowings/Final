@@ -4,14 +4,20 @@ using namespace std;
 bool code::guessChecker(){
     for(int i = 0; i < 8; i++){
         if(this->previousGuesses[i] == TRUE){ //if there is a value that has been proven true
-            this->value = i; //set value to true value
+            this->value = i + 1; //set value to true value
             return true;
         }
     }
-    if(this->previousGuesses[this->value] == FALSE || this->previousGuesses[this->value] == ALMOST){ //if this guess has already been proven wrong
+    if(this->previousGuesses[this->value - 1] == FALSE || this->previousGuesses[this->value - 1] == ALMOST){ //if this guess has already been proven wrong
         return false;
     }
     return true; //if unknown and no known true value exists, guess is allowed
+}
+
+void code::guessResult(INCODE result){ //if more information received, change data
+    if(this->previousGuesses[this->value - 1] < result){ //Almost and false are treated (almost) the same, no (pressing) need for differentiation
+        this->previousGuesses[this->value - 1] = result;
+    }
 }
 
 bool Codebreaker::Pguess(){
