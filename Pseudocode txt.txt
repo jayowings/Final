@@ -34,39 +34,40 @@ until all five are correct or no turns remain
 
 computer turn logic
 *flags
-if(prevCorrect + prevAlmost <> Correct + Almost){
-    greater than {
-        if num changed values == difference, changed values in prevguess are flagged as "ALMOST" and new values are flagged as FALSE (position is irrelevant for num changed values)
-    }less than {
-        if num changed values == difference, new values are flagged as ALMOST and prev values are flagged as FALSE (position is irrelevant for num changed values)
-    }
+if(prevCorrect == Correct and change == 1){
+    set to FALSE
+    if Almost == 0 and no nonTRUE duplicates, set all to FALSE for changed value
 }
 if(prevCorrect <> Correct){
-    greater than{
-        if num changed values == difference, changed values in prevguess are flagged as TRUE and new values are flagged as ALMOST or FALSE based on change in prevAlmost->Almost
-    }less than{
-        if num changed values == difference, new values are flagged as TRUE and prev values are flagged as FALSE or ALMOST based on change in prevAlmost->Almost
-    }
-    *****only one TRUE value can exist per previousGuesses[8] array (value checker)
+    *****only one TRUE value can exist per previousGuesses[8] array (value checker) (for the few times two values are changed)
+    set correct value to TRUE
+    set other value to FALSE (if Almost == 0 and no nonTRUE duplicates set all to FALSE for changed value)
+    call back TRUE value
 }
-save guess (in a linked list?) in previous guess value (initialized as [0,0,0,0,0]) along with prevCorrect and prevAlmost
+
 
 *manipulation
 save correct as prevCorrect
 for(value in code == true){
     Correct-- (ignore values known as TRUE)
 }
+
+if(Correct > 0){
+    add new value in [4] (or 1 less than previous change if num values changed == 1) (skipping TRUE values)
+    unless [] of previous changes == Correct (+1 for all value == TRUE of lower index), then mark TRUE and recount Correct (should be 0)
+}
+
 if(Almost > 0 and Correct == 0){
+    set all values to FALSE
     shift all values left one (skipping over true values), add new value in [4]
-    repeat shift for values that are ALMOST in given location ([0] is stored at [4])
-}else if(Correct > 0){
-    add new value in [4], unless previous changes (location matters) == 1(or 2 if other changed value == TRUE), then new value(skipping known FALSE or ALMOST in given position) is placed at [previous change - 1(skipping TRUE)]
+    repeat shift for values that are FALSE in given location ([0] is stored at [4])
+    count shifts, if >= 5, new(UNKNOWN) value for all FALSE
 }else if(Correct == 0 and Almost == 0){
     flag all values as FALSE in all positions (ignoring any values marked TRUE)
     New(UNKNOWN) value for all FALSE
 }
 
-
+save guess (in a linked list?) in previous guess value (initialized as [0,0,0,0,0]) along with prevCorrect and prevAlmost
 
 
 
