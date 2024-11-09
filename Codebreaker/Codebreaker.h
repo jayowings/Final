@@ -15,6 +15,7 @@ class code{
         bool guessChecker();
         INCODE previousGuesses[8];
         void guessResult(INCODE result);
+        void makeGuess();
 };
 
 
@@ -28,6 +29,7 @@ class Codebreaker{
         bool Pguess();
         bool Cguess();
         bool checkCorrect();
+        void makeGuess();
     public:
         Codebreaker(bool PlayerCode, int& gamesWon);
 };

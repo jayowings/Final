@@ -3,21 +3,27 @@ using namespace std;
 
 bool code::guessChecker(){
     for(int i = 0; i < 8; i++){
-        if(this->previousGuesses[i] == TRUE){ //if there is a value that has been proven true
-            this->value = i + 1; //set value to true value
+        if(previousGuesses[i] == TRUE){ //if there is a value that has been proven true
+            value = i + 1; //set value to true value //Value == index + 1
             return true;
         }
     }
-    if(this->previousGuesses[this->value - 1] == FALSE){ //if this guess has already been proven wrong
+    if(previousGuesses[value - 1] == FALSE){ //if this guess has already been proven wrong
         return false;
     }
-    return true; //if unknown and no known true value exists, guess is allowed
+    return true; //if value is unknown and no known true value exists, guess is allowed
 }
 
 void code::guessResult(INCODE result){ //if more information received, change data
-    if(this->previousGuesses[this->value - 1] < result){ //Will not override TRUE
-        this->previousGuesses[this->value - 1] = result;
+    if(previousGuesses[value - 1] < result){ //Will not override TRUE
+        previousGuesses[value - 1] = result;
     }
+}
+
+void code::makeGuess(){
+    do{//new value cannot be value previously proven as false
+        value = (rand() % 8) + 1;
+    }while(!guessChecker());
 }
 
 bool Codebreaker::Pguess(){
@@ -34,7 +40,7 @@ bool Codebreaker::Pguess(){
         getline(cin, guessCode[1].inputArray, ',');
         getline(cin, guessCode[2].inputArray, ',');
         getline(cin, guessCode[3].inputArray, ',');
-        getline(cin, guessCode[4].inputArray, ',');
+        cin >> guessCode[4].inputArray;
         for(int i = 0; i < 5; i++){
             if(guessCode[i].inputArray == "1"){
                 guessCode[i].value = 1;
@@ -67,7 +73,8 @@ bool Codebreaker::Pguess(){
 bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if each code position was a struct with members int value and enum{UNKNOWN, FALSE, ALMOST, TRUE} or a class with a built in random function**//
     //initial guess created
     for(int i = 0; i < 5; i++){
-        computerCode[i].value = guessCode[i].value = (rand() % 8) + 1;
+        computerCode[i].value = 0;
+        makeGuess();
     }
     int prevCorrect = 0, prevAlmost = 0;
 
@@ -80,7 +87,7 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
             }
         }
 
-        cout << "How many are in the correct position? ";
+        cout << "\nHow many are in the correct position? ";
     //user input numCorrect and numAlmost, break for computer win (return false)
         cin >> Correct;
         if(Correct == 5){
@@ -220,8 +227,9 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                     }
                     prevVal = guessCode[newValIndex].value;
                     do{//new value cannot be old value or value previously proven as false
-                        guessCode[newValIndex].value = (rand() % 8) + 1;
-                    }while(!guessCode[newValIndex].guessChecker() || guessCode[newValIndex].value == prevVal);
+                        guessCode[newValIndex].makeGuess();
+                    }while(guessCode[newValIndex].value == prevVal);
+                    break;
                 }
             }
         }
@@ -244,9 +252,7 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                 }else{
                     prevValues[j] = guessCode[i].value;
                     if(j = 0){ //add new value in prevValues[0]
-                        do{//new value cannot be value previously proven as false
-                            guessCode[i].value = (rand() % 8) + 1;
-                        }while(!guessCode[i].guessChecker());
+                        guessCode[i].makeGuess();
                         int temp = prevValues[j];
                         prevValues[j] = guessCode[i].value;
                         guessCode[i].value = temp;
@@ -282,9 +288,7 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                             continue;
                         }
                         else{
-                            do{
-                                guessCode[i].value = (rand() % 8) + 1; //get new value
-                            }while(!guessCode[i].guessChecker());
+                            guessCode[i].makeGuess(); //get new value
                         }
                         
                     }
@@ -306,9 +310,7 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                             guessCode[j].previousGuesses[guessCode[i].value] = FALSE;
                         }
                     }
-                    do{
-                        guessCode[i].value = (rand() % 8) + 1; //get new value
-                    }while(!guessCode[i].guessChecker());
+                    guessCode[i].makeGuess();
                 }
             }
         }
@@ -355,8 +357,8 @@ bool Codebreaker::checkCorrect(){ //Player guess, Computer Code
     }
 }
 
-Codebreaker::Codebreaker(bool PlayerCdoe, int& gamesWon){
-    if(PlayerCdoe){
+Codebreaker::Codebreaker(bool PlayerCode, int& gamesWon){
+    if(PlayerCode){
         if(Pguess()){
             gamesWon++;
         }
@@ -367,6 +369,12 @@ Codebreaker::Codebreaker(bool PlayerCdoe, int& gamesWon){
         }
     }
     //if Player is codemaker, run Cguess, if false, gamesWon++
+}
+
+void Codebreaker::makeGuess(){
+    for(int i = 0; i < 5; i++){
+        guessCode[i].makeGuess();
+    }
 }
 
 void CodebreakerSetUp(int& gamesWon){
