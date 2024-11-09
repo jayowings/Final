@@ -276,30 +276,45 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                         count = 0; //end iterations
                     }
                 }
-                if(count == 5){//reset values for randAll
+                if(count == 5){//randomizes values so as not to enter an infinite loop
                     for(int i = 0; i<5; i++){
-                        guessCode[i].value = computerCode[i].value;
+                        if(guessCode[i].correctGuess == TRUE){
+                            continue;
+                        }
+                        else{
+                            do{
+                                guessCode[i].value = (rand() % 8) + 1; //get new value
+                            }while(!guessCode[i].guessChecker());
+                        }
+                        
                     }
-                    count = Almost = 0; //break iteration, queue up randAll
+                    count = 0; //break iteration
                 }
             }while(count != 0);
         }
 
-
-        for(int i = 0; i < 5; i++){ //When element(s) is known to be false
-            if(!guessCode[i].guessChecker()){
-                do{
-                    guessCode[i].value = (rand() % 8) + 1;
-                }while(!guessCode[i].guessChecker());
+        //all known true of false, no almost
+        if(Almost == 0 && unkownCorrect == 0){
+            for(int i = 0; i < 5; i++){ //flag values and randomize FALSE
+                if(guessCode[i].correctGuess == TRUE){
+                    continue; //skip TRUE values
+                }else{
+                    for(int j = 0; j < 5; j++){//all guesses that are not TRUE are FALSE
+                        if(guessCode[j].value == guessCode[i].value && guessCode[j].correctGuess == TRUE){ // DO NOT mark know TRUE values as FALSE
+                            continue;
+                        }else{
+                            guessCode[j].previousGuesses[guessCode[i].value] = FALSE;
+                        }
+                    }
+                    do{
+                        guessCode[i].value = (rand() % 8) + 1; //get new value
+                    }while(!guessCode[i].guessChecker());
+                }
             }
         }
-        //if no elements are known to be FALSE
-        if(guessCode[0].value == computerCode[0].value && guessCode[1].value == computerCode[1].value && guessCode[2].value == computerCode[2].value && guessCode[3].value == computerCode[3].value && guessCode[4].value == computerCode[4].value){
-            //Swap Almost values
-        }
-
     }
     //if turnsToGo == 0 and code has not been found, return true
+    return true;
 }
 
 bool Codebreaker::checkCorrect(){ //Player guess, Computer Code
