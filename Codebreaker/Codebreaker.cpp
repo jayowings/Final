@@ -74,34 +74,34 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
     //initial guess created
     for(int i = 0; i < 5; i++){
         computerCode[i].value = 0;
-        makeGuess();
     }
+    makeGuess();
     int prevCorrect = 0, prevAlmost = 0;
 
     for ( ; turnsToGo > 0; turnsToGo--){
     //Computer prints guess
-        for(int i = 0; i < 5; i++){
-            cout << guessCode[i].value;
-            if(i != 4){
-                cout << ',';
+        printGuess();
+
+        while(true){
+            cout << "\nHow many are in the correct position? ";
+    //user input numCorrect and numAlmost, break for computer win (return false)
+            cin >> Correct;
+            if(Correct == 5){
+                return false;//Computer wins
+            }
+            cout << "How many are in the wrong position? ";
+            cin >> Almost;
+            if(Correct + Almost > 5 || (Correct == 4 && Almost == 1)){ //invalid input restarts the game
+                cout << "Invalid input. Please review game rules and try again.";
+                int i = 0;
+                CodebreakerSetUp(i);
+                if(i == 0) return false;
+                else return true;
+            }else{
+                break;
             }
         }
 
-        cout << "\nHow many are in the correct position? ";
-    //user input numCorrect and numAlmost, break for computer win (return false)
-        cin >> Correct;
-        if(Correct == 5){
-            return false;
-        }
-        cout << "How many are in the wrong position? ";
-        cin >> Almost;
-        if(Correct + Almost > 5 || (Correct == 4 && Almost == 1)){ //invalid input restarts the game
-            cout << "Invalid input. Please review game rules and try again.";
-            int i = 0;
-            CodebreakerSetUp(i);
-            if(i == 0) return false;
-            else return true;
-        }
         int ComparePrev[12];
         ComparePrev[10] = 5;
         //ComparePrev[11] = 5;
@@ -374,6 +374,15 @@ Codebreaker::Codebreaker(bool PlayerCode, int& gamesWon){
 void Codebreaker::makeGuess(){
     for(int i = 0; i < 5; i++){
         guessCode[i].makeGuess();
+    }
+}
+
+void Codebreaker::printGuess(){
+    for(int i = 0; i < 5; i++){
+        cout << guessCode[i].value;
+        if(i != 4){
+            cout << ',';
+        }
     }
 }
 

@@ -30,6 +30,7 @@ class Codebreaker{
         bool Cguess();
         bool checkCorrect();
         void makeGuess();
+        void printGuess();
     public:
         Codebreaker(bool PlayerCode, int& gamesWon);
 };
