@@ -14,9 +14,15 @@ bool code::guessChecker(){
     return true; //if value is unknown and no known true value exists, guess is allowed
 }
 
-void code::guessResult(INCODE result){ //if more information received, change data
-    if(previousGuesses[value - 1] < result){ //Will not override TRUE
-        previousGuesses[value - 1] = result;
+void code::Result(INCODE result, int num = 0){ //set flags
+    if(num == 0){ //default value was giving me troubles
+        num = value;
+    }
+    if(previousGuesses[num - 1] < result){ //Will not override TRUE
+        previousGuesses[num - 1] = result;
+        if(num == value){ //if num is the current value
+            correctGuess = result;
+        }
     }
 }
 
@@ -24,6 +30,7 @@ void code::makeGuess(){
     do{//new value cannot be value previously proven as false
         value = (rand() % 8) + 1;
     }while(!guessChecker());
+    correctGuess == previousGuesses[value - 1];
 }
 
 bool Codebreaker::Pguess(){
@@ -91,66 +98,54 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
             }
             cout << "How many are in the wrong position? ";
             cin >> Almost;
-            if(Correct + Almost > 5 || (Correct == 4 && Almost == 1)){ //invalid input restarts the game
-                cout << "Invalid input. Please review game rules and try again.";
-                int i = 0;
-                CodebreakerSetUp(i);
-                if(i == 0) return false;
-                else return true;
+            if(Correct + Almost > 5 || (Correct == 4 && Almost == 1)){ //invalid input catch
+                cout << "Invalid input. Only 5 elements can be judged. Please try again.";
             }else{
                 break;
             }
         }
 
-        int ComparePrev[12];
+        int ComparePrev[11];
         ComparePrev[10] = 5;
-        //ComparePrev[11] = 5;
         for(int i = 0; i < 5; i++){ //Check values in the same position
             ComparePrev[i] = guessCode[i].value;
             ComparePrev[i + 5] = computerCode[i].value;
-            if(ComparePrev[i] == ComparePrev[i + 5]){
-                ComparePrev[10]--; //num of values that changed
-                //ComparePrev[11]--; //Changed position same number
+            if(ComparePrev[i] == ComparePrev[i + 5]){//if values stayed the same, set to a null value
+                ComparePrev[10]--;
                 ComparePrev[i] = -1;
                 ComparePrev[i + 5] = 0;
             }
         }
-/*        for(int i=0; i<5; i++){ //Check values in different positions
-            for (int j = 5; j<10; j++){
-                if(ComparePrev[i] == ComparePrev[j]){
-                    ComparePrev[i] = -1;
-                    ComparePrev[j] = 0;
-                    ComparePrev[11]--;
-                }
-            }
-        }*/
-        
+
         //Setting Flags
-        //only works if ComparePrev == 1
+        //only works if ComparePrev[10] == 1
         if(prevCorrect > Correct && ComparePrev[10] == 1){//previous correct found by replacement
-            for(int i = 5; i < 10; i++){
-                if(ComparePrev[i] > 0){
-                    guessCode[i - 5].previousGuesses[ComparePrev[i] - 1] = TRUE; //flage previous value as true
-                    guessCode[i-5].value = ComparePrev[i]; //change value to Correct value for functions below
-                    guessCode[i-5].correctGuess = TRUE;
-                    Correct++;
+            for(int i = 0; i < 5; i++){ //code index for both changed values is the same
+                if(ComparePrev[i] > 0){ //when changed value is found
+                    guessCode[i].value = computerCode[i].value; //change value to Correct value
+                    guessCode[i - 5].Result(TRUE); //flag value as true
+                    Correct++; //for future tests
                 }
             }
         }else if(Correct > prevCorrect && ComparePrev[10] == 1){//correct found by luck
             for(int i = 0; i<5; i++){
                 if(ComparePrev[i] > 0){
-                    guessCode[i].previousGuesses[ComparePrev[i] - 1] = TRUE;
-                    guessCode[i].correctGuess = TRUE;
+                    guessCode[i].Result(TRUE);
                 }
             }
-        }
-        if(ComparePrev[10] == 1 && prevCorrect == Correct){//if no change for correct (both values are false)
-            if(Almost == 0){//if no values are in the code
+        }else if(ComparePrev[10] == 1 && prevCorrect == Correct){//if no change for correct (both values are false)
+            for(int i = 0; i<5; i++){ //automatically sets both values to FALSE
+                if(ComparePrev[i] > 0){
+                    guessCode[i].Result(FALSE);
+                    guessCode[i].previousGuesses[computerCode[i].value - 1] = FALSE;
+                }
+            }
+            if(Almost == 0){//if no nonCorrect values are in the current code
                 for(int i = 0; i<5; i++){
-                    if(ComparePrev[i] > 0 && guessCode[i].correctGuess != TRUE){ //changed value is false
+                    if(ComparePrev[i] > 0){ //changed value is false
                         for(int j = 0; j<5; j++){
-                            if (guessCode[j].previousGuesses[guessCode[i].value] != TRUE){ //don't change repeated values proven false
-                                guessCode[j].previousGuesses[guessCode[i].value] = FALSE;
+                            if (guessCode[j].correctGuess != TRUE){ //values stored as TRUE need no more information
+                                guessCode[j].Result(FALSE, guessCode[i].value);
                             }
                         }
                     }
@@ -158,22 +153,17 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
             }
             if(prevAlmost == 0){//if no values were in the prevCode
                 for(int i = 0; i<5; i++){
-                    if(ComparePrev[i+5]>0 && guessCode[i].correctGuess != TRUE){ //changed value was false
+                    if(ComparePrev[i]>0){ //changed value was false
                         for(int j = 0; j<5; j++){
-                            if (guessCode[j].previousGuesses[ComparePrev[i+5]] != TRUE){ //don't change repeated values proven false
-                                guessCode[j].previousGuesses[ComparePrev[i+5]] = FALSE;
+                            if (guessCode[j].correctGuess != TRUE){ //values stored as TRUE need no more information
+                                guessCode[j].Result(FALSE, computerCode[i].value);
                             }
                         }
                     }
                 }
             }
-            for(int i = 0; i<5; i++){
-                if(ComparePrev[i] > 0){ //if value was changed and Almost and prevAlmost != 0
-                    guessCode[i].guessResult(FALSE);
-                    guessCode[i].previousGuesses[ComparePrev[i+5] - 1] = FALSE;
-                }
-            }
         }
+
 
         int unkownCorrect = Correct; //when a value is known to be correct, tests can be skipped
         for(int i = 0; i <5; i++){
