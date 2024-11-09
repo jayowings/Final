@@ -119,11 +119,12 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
         }*/
         
         //Setting Flags
+        //only works if ComparePrev == 1
         if(prevCorrect > Correct && ComparePrev[10] == 1){//previous correct found by replacement
             for(int i = 5; i < 10; i++){
                 if(ComparePrev[i] > 0){
-                    guessCode[i - 5].previousGuesses[ComparePrev[i] - 1] = TRUE;
-                    guessCode[i-5].value = ComparePrev[i];
+                    guessCode[i - 5].previousGuesses[ComparePrev[i] - 1] = TRUE; //flage previous value as true
+                    guessCode[i-5].value = ComparePrev[i]; //change value to Correct value for functions below
                     guessCode[i-5].correctGuess = TRUE;
                     Correct++;
                 }
@@ -160,19 +161,75 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                 }
             }
             for(int i = 0; i<5; i++){
-                if(ComparePrev[i] > 0){ //if value was changed
+                if(ComparePrev[i] > 0){ //if value was changed and Almost and prevAlmost != 0
                     guessCode[i].guessResult(FALSE);
                     guessCode[i].previousGuesses[ComparePrev[i+5] - 1] = FALSE;
                 }
             }
         }
 
+        int unkownCorrect = Correct; //when a value is known to be correct, tests can be skipped
+        for(int i = 0; i <5; i++){
+            if(guessCode[i].correctGuess == TRUE){
+                unkownCorrect--;
+            }
+        }
         //Changeing values
+        //learn correct values
+        if(unkownCorrect > 0){
+            int newValIndex = 0;
+            int prevVal;
+            int lowerTrues = 0;
+            //moving right to left, add a new value to test previous value
+            for(int i = 0; i < 5; i++){
+                if(guessCode[i].correctGuess == TRUE){
+                    lowerTrues++;
+                }
+                if(ComparePrev[i] > 0){//Find last value that was changed
+                    if(i == lowerTrues){//if the first nonTRUE value was changed ("Almost" shuffle)
+                        newValIndex = 4;
+                        if(guessCode[4].correctGuess == TRUE){//check all last values until UNKNOWN is found
+                            newValIndex = 3;
+                            if(guessCode[3].correctGuess == TRUE){
+                                newValIndex = 2;
+                                if(guessCode[2].correctGuess == TRUE){//
+                                    newValIndex = 1;
+                                }
+                            }
+                        }
+                    }else if(i == unkownCorrect + lowerTrues){//if the value to be changed is the last possible value to be changed, all remaining values of lower indexes are true
+                        while(unkownCorrect > 0){
+                            if(guessCode[i - 1].correctGuess != TRUE){//skip true values
+                                guessCode[i - 1].correctGuess = guessCode[i-1].previousGuesses[guessCode[i-1].value] = TRUE;
+                                unkownCorrect--; //correct has been learned, allows next functions to trigger
+                            }else{
+                                i--;
+                            }
+                        }
+                        break;
+                    }else{//previous shift was "Correct Shift" and was not last possible value change
+                        newValIndex = i - 1;
+                        while(true){
+                            if(guessCode[newValIndex].correctGuess == TRUE){//skip true values
+                                newValIndex--;
+                            }else{
+                                break;
+                            }
+                        }
+                    }
+                    prevVal = guessCode[newValIndex].value;
+                    do{//new value cannot be old value or value previously proven as false
+                        guessCode[newValIndex].value = (rand() % 8) + 1;
+                    }while(!guessCode[newValIndex].guessChecker() || guessCode[newValIndex].value == prevVal);
+                }
+            }
+        }
+
         for(int i = 0; i < 5; i++){ //When element(s) is known to be false
             if(!guessCode[i].guessChecker()){
                 do{
                     guessCode[i].value = (rand() % 8) + 1;
-                }while(!guessCode[i].guessChecker())
+                }while(!guessCode[i].guessChecker());
             }
         }
         //if no elements are known to be FALSE
