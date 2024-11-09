@@ -170,6 +170,7 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
 
         int unkownCorrect = Correct; //when a value is known to be correct, tests can be skipped
         for(int i = 0; i <5; i++){
+            computerCode[i].value = guessCode[i].value; //previous Code is now obsolete, store for next iteration
             if(guessCode[i].correctGuess == TRUE){
                 unkownCorrect--;
             }
@@ -224,6 +225,66 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                 }
             }
         }
+
+        //"Almost shuffle"
+        if(Almost > 0 && unkownCorrect == 0){
+            int numShuffled = 0;
+            for(int i = 0; i < 5; i++){ //count numShuffled
+                if(guessCode[i].correctGuess == TRUE){
+                    continue; //skip TRUE values
+                }else{
+                    guessCode[i].previousGuesses[guessCode[i].value] = FALSE; //all guesses that are not TRUE are FALSE
+                    numShuffled++;
+                }
+            }
+            int prevValues[numShuffled];
+            for(int i = 0, j = 0; i < 5 && j < numShuffled; i++){//set values in prevValues
+                if(guessCode[i].correctGuess == TRUE){
+                    continue; //skip TRUE values
+                }else{
+                    prevValues[j] = guessCode[i].value;
+                    if(j = 0){ //add new value in prevValues[0]
+                        do{//new value cannot be value previously proven as false
+                            guessCode[i].value = (rand() % 8) + 1;
+                        }while(!guessCode[i].guessChecker());
+                        int temp = prevValues[j];
+                        prevValues[j] = guessCode[i].value;
+                        guessCode[i].value = temp;
+                    }
+                    j++;
+                }
+            }
+            int j = 1, count = 0; //rotate in iterations, only iterate so many times
+            do{
+                for(int i = 0; i < 5; i++){ //shuffle
+                    if(guessCode[i].correctGuess == TRUE){
+                        continue;
+                    }
+                    else{
+                        if(j < numShuffled){
+                            j-=numShuffled;
+                        }
+                        guessCode[i].value = prevValues[j];
+                    }
+                }
+                j++; count++; //in case of next iteration
+                for(int i = 0; i < 5; i ++){ //check need for next iteration
+                    if(!guessCode[i].guessChecker()){ //if new value from shuffle is FALSE, shuffle will run again
+                        break;
+                    }
+                    if(i == 4){//if check has passed for all values
+                        count = 0; //end iterations
+                    }
+                }
+                if(count == 5){//reset values for randAll
+                    for(int i = 0; i<5; i++){
+                        guessCode[i].value = computerCode[i].value;
+                    }
+                    count = Almost = 0; //break iteration, queue up randAll
+                }
+            }while(count != 0);
+        }
+
 
         for(int i = 0; i < 5; i++){ //When element(s) is known to be false
             if(!guessCode[i].guessChecker()){
