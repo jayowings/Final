@@ -31,6 +31,8 @@ class Codebreaker{
         bool checkCorrect();
         void makeGuess();
         void printGuess();
+        void markAutoTRUE(int& unknownCorrect, int lastChangeIndex);
+        int findEndUNKNOWN();
     public:
         Codebreaker(bool PlayerCode, int& gamesWon);
 };

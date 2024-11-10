@@ -27,9 +27,13 @@ void code::Result(INCODE result, int num = 0){ //set flags
 }
 
 void code::makeGuess(){
+    if(previousGuesses[value - 1] == TRUE){
+        exit;
+    }
+    int preVal = value;
     do{//new value cannot be value previously proven as false
         value = (rand() % 8) + 1;
-    }while(!guessChecker());
+    }while(value == preVal || !guessChecker()); //TRUE could override preValue check
     correctGuess == previousGuesses[value - 1];
 }
 
@@ -165,18 +169,18 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
         }
 
 
-        int unkownCorrect = Correct; //when a value is known to be correct, tests can be skipped
+        int unknownCorrect = Correct; //when a value is known to be correct, tests can be skipped
         for(int i = 0; i <5; i++){
             computerCode[i].value = guessCode[i].value; //previous Code is now obsolete, store for next iteration
             if(guessCode[i].correctGuess == TRUE){
-                unkownCorrect--;
+                unknownCorrect--;
             }
         }
+
         //Changeing values
         //learn correct values
-        if(unkownCorrect > 0){
+        if(unknownCorrect > 0){
             int newValIndex = 0;
-            int prevVal;
             int lowerTrues = 0;
             //moving right to left, add a new value to test previous value
             for(int i = 0; i < 5; i++){
@@ -184,28 +188,12 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                     lowerTrues++;
                 }
                 if(ComparePrev[i] > 0){//Find last value that was changed
-                    if(i == lowerTrues){//if the first nonTRUE value was changed ("Almost" shuffle)
-                        newValIndex = 4;
-                        if(guessCode[4].correctGuess == TRUE){//check all last values until UNKNOWN is found
-                            newValIndex = 3;
-                            if(guessCode[3].correctGuess == TRUE){
-                                newValIndex = 2;
-                                if(guessCode[2].correctGuess == TRUE){//
-                                    newValIndex = 1;
-                                }
-                            }
-                        }
-                    }else if(i == unkownCorrect + lowerTrues){//if the value to be changed is the last possible value to be changed, all remaining values of lower indexes are true
-                        while(unkownCorrect > 0){
-                            if(guessCode[i - 1].correctGuess != TRUE){//skip true values
-                                guessCode[i - 1].correctGuess = guessCode[i-1].previousGuesses[guessCode[i-1].value] = TRUE;
-                                unkownCorrect--; //correct has been learned, allows next functions to trigger
-                            }else{
-                                i--;
-                            }
-                        }
+                    if(i == lowerTrues){//AlmostShuffle or first guess
+                        newValIndex = findEndUNKNOWN();
+                    }else if(i == unknownCorrect + lowerTrues){//if the value to be changed is the last necessary value to be changed, all remaining values of lower indexes are TRUE
+                        markAutoTRUE(unknownCorrect, i);
                         break;
-                    }else{//previous shift was "Correct Shift" and was not last possible value change
+                    }else{//previous change was "Correct Test" and was not last possible value change
                         newValIndex = i - 1;
                         while(true){
                             if(guessCode[newValIndex].correctGuess == TRUE){//skip true values
@@ -215,17 +203,14 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
                             }
                         }
                     }
-                    prevVal = guessCode[newValIndex].value;
-                    do{//new value cannot be old value or value previously proven as false
-                        guessCode[newValIndex].makeGuess();
-                    }while(guessCode[newValIndex].value == prevVal);
+                    guessCode[newValIndex].makeGuess();
                     break;
                 }
             }
         }
 
         //"Almost shuffle"
-        if(Almost > 0 && unkownCorrect == 0){
+        if(Almost > 0 && unknownCorrect == 0){
             int numShuffled = 0;
             for(int i = 0; i < 5; i++){ //count numShuffled
                 if(guessCode[i].correctGuess == TRUE){
@@ -288,7 +273,7 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
         }
 
         //all known true of false, no almost
-        if(Almost == 0 && unkownCorrect == 0){
+        if(Almost == 0 && unknownCorrect == 0){
             for(int i = 0; i < 5; i++){ //flag values and randomize FALSE
                 if(guessCode[i].correctGuess == TRUE){
                     continue; //skip TRUE values
@@ -347,20 +332,6 @@ bool Codebreaker::checkCorrect(){ //Player guess, Computer Code
     }
 }
 
-Codebreaker::Codebreaker(bool PlayerCode, int& gamesWon){
-    if(PlayerCode){
-        if(Pguess()){
-            gamesWon++;
-        }
-    //if Player is codebreaker, run Pguess, if true, gamesWon++
-    }else{
-        if(!Cguess()){
-            gamesWon++;
-        }
-    }
-    //if Player is codemaker, run Cguess, if false, gamesWon++
-}
-
 void Codebreaker::makeGuess(){
     for(int i = 0; i < 5; i++){
         guessCode[i].makeGuess();
@@ -374,6 +345,40 @@ void Codebreaker::printGuess(){
             cout << ',';
         }
     }
+}
+
+void Codebreaker::markAutoTRUE(int& unknownCorrect, int lastChangeIndex){
+    while(unknownCorrect > 0){
+        lastChangeIndex--;
+        if(guessCode[lastChangeIndex].correctGuess != TRUE){//skip true values
+            guessCode[lastChangeIndex].Result(TRUE); //
+            unknownCorrect--; //correct has been learned, allows next functions to trigger
+        }
+    }
+}
+
+int Codebreaker::findEndUNKNOWN(){
+    int endIndex;
+    for(int i = 5; i>0; i--){
+        if(guessCode[i].correctGuess != TRUE){
+            endIndex = i;
+            return endIndex;
+        }
+    }
+}
+
+Codebreaker::Codebreaker(bool PlayerCode, int& gamesWon){
+    if(PlayerCode){
+        if(Pguess()){
+            gamesWon++;
+        }
+    //if Player is codebreaker, run Pguess, if true, gamesWon++
+    }else{
+        if(!Cguess()){
+            gamesWon++;
+        }
+    }
+    //if Player is codemaker, run Cguess, if false, gamesWon++
 }
 
 void CodebreakerSetUp(int& gamesWon){
