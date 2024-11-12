@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include "Codebreaker.h"
+#include "Yahtzee.h"
 
 using namespace std;
 
@@ -16,11 +18,9 @@ int main(){
         if(choice == "Quit"){
             break;
         }else if(choice == "Yahtzee"){
-            #include "Yahtzee.h"
             YahtzeeSetUp(gamesWon);
             gamesPlayed++;
         }else if(choice == "Codebreaker"){
-            #include "Codebreaker.h"
             CodebreakerSetUp(gamesWon);
             gamesPlayed++;
         };
