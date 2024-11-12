@@ -13,11 +13,10 @@ class code{
         int value = 0;
         INCODE correctGuess = UNKNOWN;
         bool guessChecker();
-        INCODE previousGuesses[8];
+        INCODE previousGuesses[8] = {UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN};
         void Result(INCODE result, int num);
         void makeGuess();
 };
-
 
 class Codebreaker{
     private:
@@ -38,4 +37,4 @@ class Codebreaker{
 };
 
 void CodebreakerSetUp(int& gamesWon);
-//#include "Codebreaker.cpp"
+#include "Codebreaker.cpp"
