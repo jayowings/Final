@@ -1,10 +1,10 @@
 ////Ideas
 minesweeper
-*Uno
+Uno
 username/password database
 Settlers of Catan
 *Codebreaker Game
-*Tsuro
+Tsuro
 
 
 
@@ -12,24 +12,24 @@ Settlers of Catan
 Game console
 
 if input game name is (per gamename)
-include and run game
+run game
 
 
 Codebreaker game
-computer or player choice
+input if computer or player makes the code
 if computer
 create an array[5] with five set values
-until all five are correct or no turns remain
+until all five are guessed correctls or no turns remain
     player input string of values (separated by a comma for ease of access, no spaces)
     check values
-        per value == add to a count, remove value from player array **create temp computer array for next check without values that are exact matches
-        then, if remaining player values in computer array, add to a seperate count
+        per value in the right place in the code, add to a count, remove value from player array **create temp computer array for next check without values that are exact matches
+        then, if remaining player values exist in computer array, add to a seperate count
     display checks
 if player
 until all five are correct or no turns remain
     computer displays array[5] (first iteration all values are random)
-    player inputs correct and "in but not correct" values
-    computer saves # values, randomizing the rest (# based loosely on num correct and in)
+    player inputs correct and "in the code but not in the correct place" values
+    computer saves # of values, randomizing the rest (# based loosely on num correct and in)
     if all 5 were correct, computer wins
 
 computer turn logic
@@ -48,7 +48,7 @@ if(prevCorrect <> Correct){
 
 *manipulation
 save correct as prevCorrect
-for(value in code == true){
+for(value in code == true){ "Known corrcet"
     Correct-- (ignore values known as TRUE)
 }
 
