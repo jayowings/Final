@@ -1008,7 +1008,7 @@ void YahtzeePlayer::Pturn(){ //roll logic and save dice logic, call other functi
     }
     chooseScore(d1.value, d2.value, d3.value, d4.value, d5.value);
      if(!endPlayer){
-        if(turnorder->computer){//Computer turn will have its own logic
+        if(turnorder->cpuPlayer){//Computer turn will have its own logic
             turnorder->Cturn();
         }else{
             turnorder->Pturn();//each player will take their turn in order, 
@@ -1048,7 +1048,7 @@ void YahtzeePlayer::endGame(){
     cout << "Lower Total:____" << setw(3) << right << setfill('_') << lowerTotal << endl;
     cout << "Total:_________" << setw(4) << right << setfill('_') << total << endl;
     cin >> done;
-    if(!endPlayer && !computer){
+    if(!endPlayer && !cpuPlayer){
         turnorder->endGame();
     }
 }; //calculating totals
@@ -1073,11 +1073,11 @@ YahtzeePlayer::YahtzeePlayer(int  numPlayers, bool &computerPlayer){
         cout << "Player name: "; //Get player name
         cin >> name;
         turnorder = new YahtzeePlayer((numPlayers - 1), computerPlayer); //Recursion to create last player first and set player order
-        computer = false;
+        cpuPlayer = false;
         endPlayer = false;
     }else{
-        computer = computerPlayer;
-        if(computer != true){ //If the last player is a computer, skip
+        cpuPlayer = computerPlayer;
+        if(cpuPlayer != true){ //If the last player is a computer, skip
             cout << "Player name: ";
             cin >> name;
             endPlayer = true; //Announce this is the last player
