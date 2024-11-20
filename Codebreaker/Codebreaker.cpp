@@ -82,11 +82,13 @@ bool Codebreaker::Pguess(){
         }
     //compare using checkCorrect
         if(checkCorrect()){
+            cout << "Player wins!\n";
             return true;
         }
     //if win, break, return true, else loop back to //****//
     }
     //if turnsToGo == 0 and code has not been found, return false
+    cout << "Computer wins!\nBetter luck next time!\n";
     return false;
 };
 
@@ -107,8 +109,10 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
     //user input numCorrect and numAlmost, break for computer win (return false)
             cin >> Correct;
             if(Correct == 5){
+                cout << "Computer wins!\nBetter luck next time!\n";
                 return false;//Computer wins
             }else if(turnsToGo == 1){
+                cout << "Player wins!\n";
                 return true;
             }
             cout << "How many are in the wrong position? ";
@@ -297,6 +301,7 @@ bool Codebreaker::Cguess(){//**Computer guess array could be formatted easier if
         }
     }
     //if turnsToGo == 0 and code has not been found, return true
+    cout << "Player wins!\n";
     return true;
 }
 
